@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MLflow local tracking
+mlruns/
+mlflow.db
+
+# Generated data
+data/input/
+data/output/
+data/processed/
+
+# Keep raw dataset
+!data/raw/
+!data/raw/Loan_default.csv
+
+# Keep trained models
+!models/
+models/*
+!models/lightgbm_credit_risk.pkl
+!models/label_encoders.pkl
+
+# Secrets / environment variables
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
