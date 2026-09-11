@@ -17,6 +17,11 @@ def main():
 
     df = pd.read_csv(INPUT_DATA_PATH)
 
+    df = df.drop(
+    columns=["LoanID", "Default"],
+    errors="ignore"
+    )
+
     probabilities = []
     scores = []
     decisions = []

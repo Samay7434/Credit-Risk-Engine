@@ -493,21 +493,22 @@ elif menu == "📂 Batch Processing":
 
         if st.button("Run Batch Underwriting"):
 
-            subprocess.run(
-
+            result = subprocess.run(
                 [
-
                     "python",
-
                     "-m",
-
                     "src.models.batch_predict",
-
-                ]
-
+                ],
+                capture_output=True,
+                text=True,
             )
 
-            st.success("Batch Underwriting Completed!")
+            if result.returncode == 0:
+                st.success("Batch Underwriting Completed!")
+            else:
+                st.error("Batch Underwriting Failed!")
+                st.code(result.stderr)
+                st.stop()
 
             report = pd.read_csv(OUTPUT_DATA_PATH)
 
