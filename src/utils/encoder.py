@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from src.config import ENCODER_PATH
 
 
-def encode_dataset(df: pd.DataFrame) -> pd.DataFrame:
+def encode_dataset(df: pd.DataFrame, save: bool = True) -> pd.DataFrame:
     """
     Encode all categorical columns and save encoders.
     """
@@ -25,6 +25,10 @@ def encode_dataset(df: pd.DataFrame) -> pd.DataFrame:
 
         encoders[column] = encoder
 
-    joblib.dump(encoders, ENCODER_PATH)
+    if save:
+        ENCODER_PATH.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(encoders, ENCODER_PATH)
+
+    df.attrs["label_encoders"] = encoders
 
     return df

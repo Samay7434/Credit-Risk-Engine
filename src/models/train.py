@@ -1,8 +1,14 @@
+import json
 import joblib
 import mlflow
 import mlflow.lightgbm
 
-from src.config import MODEL_PATH
+from src.config import (
+    CANDIDATE_DIR,
+    CANDIDATE_ENCODER_PATH,
+    CANDIDATE_METRICS_PATH,
+    CANDIDATE_MODEL_PATH,
+)
 
 from src.data.loader import load_data
 from src.data.data_preprocessing import clean_dataset
@@ -28,7 +34,8 @@ def main():
     df = clean_dataset(df)
 
     # Encode
-    df = encode_dataset(df)
+    df = encode_dataset(df, save=False)
+    encoders = df.attrs["label_encoders"]
 
     # Split
     X_train, X_test, y_train, y_test = prepare_features(df)
@@ -45,6 +52,18 @@ def main():
         X_test,
         y_test,
     )
+
+    # Persist the candidate as a matched model/encoder pair. Production artifacts
+    # remain untouched until a deliberate promotion step is added.
+    CANDIDATE_DIR.mkdir(parents=True, exist_ok=True)
+    joblib.dump(model, CANDIDATE_MODEL_PATH)
+    joblib.dump(encoders, CANDIDATE_ENCODER_PATH)
+    serializable_metrics = {
+        key: value.tolist() if hasattr(value, "tolist") else value
+        for key, value in metrics.items()
+    }
+    with CANDIDATE_METRICS_PATH.open("w", encoding="utf-8") as metrics_file:
+        json.dump(serializable_metrics, metrics_file, indent=2)
 
     # MLflow
     mlflow.set_experiment("Credit Risk Engine")
@@ -69,16 +88,14 @@ def main():
             name="lightgbm_model",
         )
 
-    joblib.dump(
-        model,
-        MODEL_PATH,
-    )
-
     print("\nMODEL PERFORMANCE\n")
 
     for key, value in metrics.items():
 
         print(f"{key}: {value}")
+
+    print(f"\nCandidate artifacts saved under: {CANDIDATE_DIR}")
+    print("The production model and encoder artifacts were not changed.")
 
 
 if __name__ == "__main__":

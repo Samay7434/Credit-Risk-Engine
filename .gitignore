@@ -32,6 +32,7 @@ data/processed/
 models/*
 !models/lightgbm_credit_risk.pkl
 !models/label_encoders.pkl
+models/candidates/
 
 # Secrets / environment variables
 .env

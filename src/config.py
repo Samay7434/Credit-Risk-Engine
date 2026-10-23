@@ -16,6 +16,11 @@ MODEL_PATH = MODEL_DIR / "lightgbm_credit_risk.pkl"
 
 ENCODER_PATH = MODEL_DIR / "label_encoders.pkl"
 
+CANDIDATE_DIR = MODEL_DIR / "candidates"
+CANDIDATE_MODEL_PATH = CANDIDATE_DIR / "lightgbm_credit_risk_candidate.pkl"
+CANDIDATE_ENCODER_PATH = CANDIDATE_DIR / "label_encoders_candidate.pkl"
+CANDIDATE_METRICS_PATH = CANDIDATE_DIR / "evaluation_metrics.json"
+
 MLRUNS_PATH = PROJECT_ROOT / "mlruns"
 
 INPUT_DATA_PATH = DATA_DIR / "input" / "loan_applications.csv"
